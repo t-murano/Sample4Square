@@ -4,18 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
-    <Button
-        android:id="@+id/btnRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="request" />
-        
-    <TextView
-        android:id="@+id/resultText"
+    <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:text="result_display_area"/>
-
+        android:orientation="horizontal" >
+	    <Button
+	        android:id="@+id/btnGetFriendsData"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="get friends data" />
+	    <Button 
+	        android:id="@+id/btnGetFriendsCheckins"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:text="get friends checkins"/>
+    </LinearLayout>
+    
+    <ScrollView 
+        android:id="@+id/resultScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+	    <TextView
+	        android:id="@+id/resultText"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="result_display_area" />
+    </ScrollView>
 </LinearLayout>
