@@ -87,8 +87,8 @@ public class RequestFragment extends Fragment {
 //				InputStream stream = hEntity.getContent();
 //				InputStreamReader isReader = new InputStreamReader(stream);
 //				JsonReader jsonReader = new JsonReader(isReader);
-//				Log.d(TAG, "createdJsonReader");
-//				friendList = FoursquareJsonParser.readFriends(jsonReader);
+				
+//				friendList = FoursquareJsonParser.readFriends(jsonObject);
 
 			} catch (ClientProtocolException e) {
 				// TODO 自動生成された catch ブロック
@@ -108,8 +108,8 @@ public class RequestFragment extends Fragment {
 		if (friendList != null) {
 			StringBuilder builder = new StringBuilder();
 			for (FriendData fd : friendList) {
-				builder.append(fd.getId());
-				builder.append(fd.getLastName());
+				builder.append("id : " + fd.getId());
+				builder.append(", name : " + fd.getLastName());
 				builder.append(fd.getFirstName());
 				builder.append("\n");
 			}

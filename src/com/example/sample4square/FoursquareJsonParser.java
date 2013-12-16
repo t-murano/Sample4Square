@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import model.FriendData;
 
 import android.util.JsonReader;
@@ -12,68 +16,34 @@ import android.util.Log;
 public class FoursquareJsonParser {
 	static final String TAG = "FoursquareJsonParser";
 	
-	public static ArrayList<FriendData> readFriends(JsonReader reader) {
-		ArrayList<FriendData> friendList = new ArrayList<FriendData>();
+	public static ArrayList<FriendData> readFriends(JSONObject jsonObject0) {
+		ArrayList<FriendData> list = new ArrayList<FriendData>();
 		
 		try {
-			reader.beginObject();
-			Log.d(TAG, "readObject");
-			while (reader.hasNext()) {
-				String name = reader.nextName();
-				Log.d(TAG, name);
-				if (name.equals("response")) {
-					
-					reader.beginObject();
-					// 最初がchecksumで次がfriends
-					name = reader.nextName();
-					Log.d(TAG, name);
-					reader.skipValue();
-					// friends
-					name = reader.nextName();
-					Log.d(TAG, name);
-					reader.beginObject();
-					name = reader.nextName();
-					Log.d(TAG, name);
-					// 最初がcountで次がitems
-					reader.skipValue();
-					name = reader.nextName();
-					Log.d(TAG, name);
-					reader.beginArray();
-					while (reader.hasNext()) {
-						friendList.add(readFriendData(reader));
-					}
-					reader.endArray();
-					reader.endObject();
-					reader.endObject();
-				} else {
-					reader.skipValue();
-				}
-			} 
-			reader.endObject();
-		} catch (IOException e) {
+			JSONObject jsonObject1 = jsonObject0.getJSONObject("response");
+			JSONObject jsonObject2 = jsonObject1.getJSONObject("friends");
+			JSONArray jsonArray = jsonObject2.getJSONArray("items");
+			for (int i = 0; i < jsonArray.length(); i++) {
+				FriendData fd = new FriendData();
+				JSONObject jsonObject3 = jsonArray.getJSONObject(i);
+				fd.setId(jsonObject3.getLong("id"));
+				fd.setLastName(jsonObject3.getString("lastName"));
+				fd.setFirstName(jsonObject3.getString("firstName"));
+				// facebookの固有値を取得
+				JSONObject jsonContact = jsonObject3.getJSONObject("contact");
+				fd.setFacebook(jsonContact.getLong("facebook"));
+				// アカウントのサムネのurlの取得
+				JSONObject jsonPhoto = jsonObject3.getJSONObject("photo");
+				
+				list.add(fd);
+			}
+		} catch (JSONException e) {
+			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
-		return friendList;
+		
+		return list;
 	}
-	
-	static FriendData readFriendData(JsonReader reader) throws IOException{
-		FriendData fd = new FriendData();
-		reader.beginObject();
-		while (reader.hasNext()) {
-			String name = reader.nextName();
-			if (name.equals("id")) {
-				fd.setId(reader.nextLong());
-				Log.d(TAG, name);
-			} else if (name.equals("firstName")) {
-				fd.setFirstName(reader.nextString());
-			} else if (name.equals("lastName")) {
-				fd.setLastName(reader.nextString());
-			} else {
-				reader.skipValue();
-			}
-		}
-		reader.endObject();
-		return fd;
-	}
+
 	
 }

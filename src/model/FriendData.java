@@ -4,8 +4,10 @@ public class FriendData {
 	long id;
 	String firstName;
 	String lastName;
-	
-	
+	long facebook;
+	String photoUrl;
+
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -18,6 +20,14 @@ public class FriendData {
 		this.lastName = lastName;
 	}
 	
+	public void setFacebook(long facebook) {
+		this.facebook = facebook;
+	}
+	
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl.replace("\\", "");
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -28,5 +38,13 @@ public class FriendData {
 	
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public long getFacebook() {
+		return facebook;
+	}
+	
+	public String getPhotoUrl() {
+		return photoUrl;
 	}
 }
