@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 
+import model.CheckinData;
 import model.FriendData;
 
 import org.apache.http.HttpEntity;
@@ -49,6 +50,8 @@ public class RequestFragment extends Fragment {
 	static final String URL_FRIENDS = "https://api.foursquare.com/v2/users/self/friends";
 	static final String TOKEN_QUALIFIER = "?oauth_token=";
 	static final int LIB_VERSION = 20130509;
+	static final int FRIENDS_DATA = 1;
+	static final int CHECKINS_DATA = 2;
 	
 	@ViewById(R.id.resultText)
 	TextView resultText;
@@ -59,21 +62,21 @@ public class RequestFragment extends Fragment {
 		ExampleTokenStore ets = ExampleTokenStore.get();
 		String token = ets.getToken(getActivity());
 		String uri = URL_FRIENDS + TOKEN_QUALIFIER + token + "&limit=100" + "&v=" + LIB_VERSION;
-		getHttpResponse(uri, token);
+		getHttpResponse(uri, token, FRIENDS_DATA);
 	}
 	
 	@Click(R.id.btnGetFriendsCheckins)
 	void onClickCheckinsButton() {
 		ExampleTokenStore ets = ExampleTokenStore.get();
 		String token = ets.getToken(getActivity());
-		String uri = "";
+		String uri = "https://api.foursquare.com/v2/checkins/recent" + TOKEN_QUALIFIER + token + "&v=" + LIB_VERSION;
+		getHttpResponse(uri, token, CHECKINS_DATA);
 	}
 	
 	@Background
-	void getHttpResponse(String uri, String token) {
+	void getHttpResponse(String uri, String token, int identifier) {
 		String strResponse = "unprocessed";
 		HttpClient hClient = new DefaultHttpClient();
-		ArrayList<FriendData> friendList = null;
 		if (TextUtils.isEmpty(token)) {
 			strResponse = "トークンが存在しません。";
 		} else {
@@ -82,13 +85,42 @@ public class RequestFragment extends Fragment {
 				HttpResponse hResponse = hClient.execute(hGet);
 				HttpEntity hEntity = hResponse.getEntity();
 				JSONObject jsonObject = new JSONObject(EntityUtils.toString(hEntity));
-				strResponse = jsonObject.toString(4);
+				// jsonの全体を見たいときに実行
+//				strResponse = jsonObject.toString(4);
 				
 //				InputStream stream = hEntity.getContent();
 //				InputStreamReader isReader = new InputStreamReader(stream);
 //				JsonReader jsonReader = new JsonReader(isReader);
 				
-//				friendList = FoursquareJsonParser.readFriends(jsonObject);
+				// jsonを解析したいときに実行
+				// 呼び出し元により処理を区別する
+				if (identifier == FRIENDS_DATA) {
+					ArrayList<FriendData> friendList = FoursquareJsonParser.readFriends(jsonObject);
+					if (friendList != null) {
+						StringBuilder builder = new StringBuilder();
+						for (FriendData fd : friendList) {
+							builder.append("id : " + fd.getId());
+							builder.append(", name : " + fd.getLastName());
+							builder.append(fd.getFirstName());
+							builder.append(", facebook : " + fd.getFacebook());
+							builder.append(", photoUrl : " + fd.getPhotoUrl());
+							builder.append("\n");
+						}
+						strResponse = builder.toString();
+					}
+				} else if (identifier == CHECKINS_DATA) {
+					ArrayList<CheckinData> checkinList = FoursquareJsonParser.readCheckins(jsonObject);
+					if (checkinList != null) {
+						StringBuilder builder = new StringBuilder();
+						for (CheckinData cd : checkinList) {
+							builder.append("id : " + cd.getCheckinId());
+							builder.append(", name : " + cd.getVenueName());
+							builder.append(", url : " + cd.getPhotoUrl());
+							builder.append("\n");
+						}
+						strResponse = builder.toString();
+					}
+				}
 
 			} catch (ClientProtocolException e) {
 				// TODO 自動生成された catch ブロック
@@ -105,22 +137,17 @@ public class RequestFragment extends Fragment {
 			}
 
 		}
-		if (friendList != null) {
-			StringBuilder builder = new StringBuilder();
-			for (FriendData fd : friendList) {
-				builder.append("id : " + fd.getId());
-				builder.append(", name : " + fd.getLastName());
-				builder.append(fd.getFirstName());
-				builder.append("\n");
-			}
-			strResponse = builder.toString();
-		}
 		onFinishRequest(strResponse);
 	}
 
 	@UiThread
 	void onFinishRequest(String strResponse) {
 		resultText.setText(strResponse);
+	}
+	
+	@UiThread
+	void onCreateCheckinList(ArrayList<CheckinData> list) {
+		
 	}
 
 	// @Override
