@@ -6,7 +6,6 @@ public class FriendData {
 	String lastName;
 	long facebook;
 	String photoUrl;
-	final String PHOTO_SIZE = "300x300";
 
 
 	public void setId(long id) {
@@ -25,10 +24,8 @@ public class FriendData {
 		this.facebook = facebook;
 	}
 	
-	public void setPhotoUrl(String prefix, String suffix) {
-		prefix = prefix.replace("\\", "");
-		suffix = suffix.replace("\\", "");
-		photoUrl = prefix + PHOTO_SIZE + suffix;
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl.replace("\\", "");
 	}
 	
 	public long getId() {
