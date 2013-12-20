@@ -165,6 +165,7 @@ public class RequestFragment extends Fragment {
 	@UiThread
 	void onCreateCheckinList(ArrayList<CheckinData> list) {
 		checkinList.setAdapter(adapter);
+
 	}
 
 	// @Override
