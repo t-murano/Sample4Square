@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.EViewGroup;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 
 @EViewGroup(R.layout.checkin_item)
@@ -29,16 +31,18 @@ public class CheckinItemView extends LinearLayout {
 		super(context);
 	}
 	
+	@Background
 	public void bind(CheckinData checkinData) {
 		Log.d(TAG, "start bind");
-		venueName.setText(checkinData.getVenueName());
-		Drawable d;
+		Drawable d = null;
+		URL url;
+
 		try {
-			URL url = new URL(checkinData.getPhotoUrl());
+			url = new URL(checkinData.getPhotoUrl());
 			InputStream istream = url.openStream();
 			d = Drawable.createFromStream(istream, "venueImage");
 			istream.close();
-			checkinPhoto.setImageDrawable(d);
+			setImage(checkinData, d);
 			Log.d(TAG, "passed bind method");
 		} catch (MalformedURLException e) {
 			// TODO 自動生成された catch ブロック
@@ -47,5 +51,14 @@ public class CheckinItemView extends LinearLayout {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+
+	}
+
+
+	
+	@UiThread
+	void setImage(CheckinData checkinData, Drawable d) {
+		venueName.setText(checkinData.getVenueName());
+		checkinPhoto.setImageDrawable(d);
 	}
 }

@@ -64,14 +64,14 @@ public class RequestFragment extends Fragment {
 	@ViewById(R.id.resultText)
 	TextView resultText;
 	
+	@AfterViews
+	void onCreateListView() {
+		checkinList.setAdapter(adapter);
+	}
 	
 	@Bean
 	CheckinListAdapter adapter;
-	
-	@AfterViews
-	void onCreateListFirst() {
-		checkinList.setAdapter(null);
-	}
+
 
 	@Click(R.id.btnGetFriendsData)
 	void onClickDataButton() {
@@ -164,8 +164,8 @@ public class RequestFragment extends Fragment {
 	
 	@UiThread
 	void onCreateCheckinList(ArrayList<CheckinData> list) {
-		checkinList.setAdapter(adapter);
-
+		adapter.addAll(list);
+		adapter.notifyDataSetChanged();
 	}
 
 	// @Override
