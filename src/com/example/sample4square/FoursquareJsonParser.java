@@ -73,6 +73,15 @@ public class FoursquareJsonParser {
 						cd.setVenueName(venueObject.getString("name"));
 						cd.setVenueId(venueObject.getString("id"));
 						
+						JSONObject locationObject = venueObject.getJSONObject("location");
+						cd.setLng(locationObject.getDouble("lng"));
+						cd.setLat(locationObject.getDouble("lat"));
+						
+						JSONObject userObject = tmpObject.getJSONObject("user");
+						String lastName = userObject.getString("lastName");
+						String firstName = userObject.getString("firstName");
+						cd.setFriendName(lastName, firstName);
+						
 						JSONArray photoArray = photoObject.getJSONArray("items");
 						JSONObject photoObject2 = photoArray.getJSONObject(0);
 						cd.setPhotoUrl(photoObject2.getString("prefix"), photoObject2.getString("suffix"));

@@ -4,8 +4,8 @@ public class CheckinData {
 	String venueName;
 	String checkinId;
 	String venueId;
-	long lng;
-	long lat;
+	double lng;
+	double lat;
 	String photoUrl;
 	String category;
 	String friendName;
@@ -29,16 +29,16 @@ public class CheckinData {
 	public void setVenueId(String venueId) {
 		this.venueId = venueId;
 	}
-	public long getLng() {
+	public double getLng() {
 		return lng;
 	}
-	public void setLng(long lng) {
+	public void setLng(double lng) {
 		this.lng = lng;
 	}
-	public long getLat() {
+	public double getLat() {
 		return lat;
 	}
-	public void setLat(long lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 	public String getPhotoUrl() {

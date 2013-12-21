@@ -130,10 +130,14 @@ public class RequestFragment extends Fragment {
 						onCreateCheckinList(checkinList);
 						StringBuilder builder = new StringBuilder();
 						for (CheckinData cd : checkinList) {
-							builder.append("id : " + cd.getCheckinId());
-							builder.append(", name : " + cd.getVenueName());
-							builder.append(", url : " + cd.getPhotoUrl());
-							builder.append("\n");
+							builder.append("checkinId : " + cd.getCheckinId() + "\n");
+							builder.append("venueName : " + cd.getVenueName() + "\n");
+							builder.append("venueId : " + cd.getVenueId() + "\n");
+							builder.append("url : " + cd.getPhotoUrl() + "\n");
+							builder.append("friendName : " + cd.getFriendName() + "\n");
+							builder.append("lng : " + cd.getLng() + "\n");
+							builder.append("lat : " + cd.getLat() + "\n");
+							builder.append("\n\n");
 						}
 						strResponse = builder.toString();
 					}

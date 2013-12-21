@@ -24,8 +24,8 @@ public class CheckinItemView extends LinearLayout {
 	@ViewById(R.id.checkinPhoto)
 	ImageView checkinPhoto;
 	
-	@ViewById(R.id.venueName)
-	TextView venueName;
+	@ViewById(R.id.checkinText)
+	TextView checkinText;
 	
 	public CheckinItemView(Context context) {
 		super(context);
@@ -58,7 +58,12 @@ public class CheckinItemView extends LinearLayout {
 	
 	@UiThread
 	void setImage(CheckinData checkinData, Drawable d) {
-		venueName.setText(checkinData.getVenueName());
+		String venueName = checkinData.getVenueName();
+		String friendName = checkinData.getFriendName();
+		StringBuilder builder = new StringBuilder();
+		builder.append("店名 : " + venueName + "\n");
+		builder.append("投稿者 : " + friendName + "\n");
+		checkinText.setText(builder.toString());
 		checkinPhoto.setImageDrawable(d);
 	}
 }

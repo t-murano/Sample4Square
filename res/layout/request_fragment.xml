@@ -7,7 +7,8 @@
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_weight="1" >
 	    <Button
 	        android:id="@+id/btnGetFriendsData"
 	        android:layout_width="wrap_content"
@@ -25,12 +26,14 @@
 	<ListView
 	    android:id="@+id/checkinList"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" />
+	    android:layout_height="wrap_content"
+	    android:layout_weight="3" />
     
     <ScrollView 
         android:id="@+id/resultScrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_weight="4" >
 	    <TextView
 	        android:id="@+id/resultText"
 	        android:layout_width="match_parent"
