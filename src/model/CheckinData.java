@@ -4,13 +4,42 @@ public class CheckinData {
 	String venueName;
 	String checkinId;
 	String venueId;
+	String message;
 	double lng;
 	double lat;
-	String photoUrl;
+	String venueAddress;
+	public String getVenueAddress() {
+		return venueAddress;
+	}
+	public void setVenueAddress(String state, String city, String address) {
+		this.venueAddress = state + city + address;
+	}
+	int checkinCount;
+	String photoURL;
 	String category;
 	String friendName;
+	String friendId;
+	String userPhotoURL;
 	final String PHOTO_SIZE = "300x300";
 	
+	public int getCheckinCount() {
+		return checkinCount;
+	}
+	public void setCheckinCount(int checkinCount) {
+		this.checkinCount = checkinCount;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getUserPhotoURL() {
+		return userPhotoURL;
+	}
+	public void setUserPhotoURL(String userPhotoURL) {
+		this.userPhotoURL = userPhotoURL;
+	}
 	public String getVenueName() {
 		return venueName;
 	}
@@ -42,12 +71,12 @@ public class CheckinData {
 		this.lat = lat;
 	}
 	public String getPhotoUrl() {
-		return photoUrl;
+		return photoURL;
 	}
-	public void setPhotoUrl(String prefix, String suffix) {
+	public void setPhotoURL(String prefix, String suffix) {
 		prefix = prefix.replace("\\", "");
 		suffix = suffix.replace("\\", "");
-		photoUrl = prefix + PHOTO_SIZE + suffix;
+		photoURL = prefix + PHOTO_SIZE + suffix;
 	}
 	public String getCategory() {
 		return category;

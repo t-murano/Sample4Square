@@ -27,6 +27,9 @@ public class CheckinItemView extends LinearLayout {
 	@ViewById(R.id.checkinText)
 	TextView checkinText;
 	
+	@ViewById(R.id.userPhoto)
+	ImageView userPhoto;
+	
 	public CheckinItemView(Context context) {
 		super(context);
 	}
@@ -34,15 +37,17 @@ public class CheckinItemView extends LinearLayout {
 	@Background
 	public void bind(CheckinData checkinData) {
 		Log.d(TAG, "start bind");
-		Drawable d = null;
-		URL url;
 
 		try {
-			url = new URL(checkinData.getPhotoUrl());
-			InputStream istream = url.openStream();
-			d = Drawable.createFromStream(istream, "venueImage");
-			istream.close();
-			setImage(checkinData, d);
+			URL checkinUrl = new URL(checkinData.getPhotoUrl());
+			URL userUrl = new URL(checkinData.getUserPhotoURL());
+			InputStream checkinStream = checkinUrl.openStream();
+			InputStream userStream = userUrl.openStream();
+			Drawable checkinDrawable = Drawable.createFromStream(checkinStream, "venueImage");
+			Drawable userDrawable = Drawable.createFromStream(userStream, "userImage");
+			checkinStream.close();
+			userStream.close();
+			setImage(checkinData, checkinDrawable, userDrawable);
 			Log.d(TAG, "passed bind method");
 		} catch (MalformedURLException e) {
 			// TODO 自動生成された catch ブロック
@@ -54,16 +59,21 @@ public class CheckinItemView extends LinearLayout {
 
 	}
 
-
-	
 	@UiThread
-	void setImage(CheckinData checkinData, Drawable d) {
+	void setImage(CheckinData checkinData, Drawable checkinDrawable, Drawable userDrawable) {
 		String venueName = checkinData.getVenueName();
 		String friendName = checkinData.getFriendName();
+		String message = checkinData.getMessage();
+		String venueAddress = checkinData.getVenueAddress();
+		int checkinCount = checkinData.getCheckinCount();
 		StringBuilder builder = new StringBuilder();
 		builder.append("店名 : " + venueName + "\n");
 		builder.append("投稿者 : " + friendName + "\n");
+		builder.append("お店の総チェックイン数 : " + checkinCount + "\n");
+		builder.append("お店の住所 : " + venueAddress + "\n");
+		builder.append("メッセージ : " + message + "\n");
 		checkinText.setText(builder.toString());
-		checkinPhoto.setImageDrawable(d);
+		checkinPhoto.setImageDrawable(checkinDrawable);
+		userPhoto.setImageDrawable(userDrawable);
 	}
 }

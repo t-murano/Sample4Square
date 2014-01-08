@@ -77,15 +77,16 @@ public class RequestFragment extends Fragment {
 	void onClickDataButton() {
 		ExampleTokenStore ets = ExampleTokenStore.get();
 		String token = ets.getToken(getActivity());
-		String uri = URL_FRIENDS + TOKEN_QUALIFIER + token + "&limit=100" + "&v=" + LIB_VERSION;
+		String uri = URL_FRIENDS + TOKEN_QUALIFIER + token + "&limit=100" + "&v=" + LIB_VERSION + "&locale=" + "ja";
 		getHttpResponse(uri, token, FRIENDS_DATA);
 	}
 	
 	@Click(R.id.btnGetFriendsCheckins)
 	void onClickCheckinsButton() {
+		adapter.clear();
 		ExampleTokenStore ets = ExampleTokenStore.get();
 		String token = ets.getToken(getActivity());
-		String uri = URL_CHECKINS + TOKEN_QUALIFIER + token + "&v=" + LIB_VERSION;
+		String uri = URL_CHECKINS + TOKEN_QUALIFIER + token + "&v=" + LIB_VERSION + "&locale=" + "ja";
 		getHttpResponse(uri, token, CHECKINS_DATA);
 	}
 	
@@ -96,6 +97,7 @@ public class RequestFragment extends Fragment {
 		if (TextUtils.isEmpty(token)) {
 			strResponse = "トークンが存在しません。";
 		} else {
+			Log.d(TAG, "token : " + token);
 			try {
 				HttpGet hGet = new HttpGet(uri);
 				HttpResponse hResponse = hClient.execute(hGet);
@@ -133,7 +135,11 @@ public class RequestFragment extends Fragment {
 							builder.append("checkinId : " + cd.getCheckinId() + "\n");
 							builder.append("venueName : " + cd.getVenueName() + "\n");
 							builder.append("venueId : " + cd.getVenueId() + "\n");
+							builder.append("checkinCount : " + cd.getCheckinCount() + "\n");
+							builder.append("venueAddress : " + cd.getVenueAddress() + "\n");
+							builder.append("message : " + cd.getMessage() + "\n");
 							builder.append("url : " + cd.getPhotoUrl() + "\n");
+							builder.append("userImageUrl : " + cd.getUserPhotoURL() + "\n");
 							builder.append("friendName : " + cd.getFriendName() + "\n");
 							builder.append("lng : " + cd.getLng() + "\n");
 							builder.append("lat : " + cd.getLat() + "\n");

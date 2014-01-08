@@ -16,6 +16,7 @@ import android.util.Log;
 
 public class FoursquareJsonParser {
 	static final String TAG = "FoursquareJsonParser";
+	static final String PHOTO_SIZE = "300x300";
 	
 	public static ArrayList<FriendData> readFriends(JSONObject rootObject) {
 		ArrayList<FriendData> list = new ArrayList<FriendData>();
@@ -59,7 +60,7 @@ public class FoursquareJsonParser {
 				JSONObject tmpObject = recentArray.getJSONObject(i);
 				// checkinが写真付きかどうか調べる count > 0
 				JSONObject photoObject = tmpObject.getJSONObject("photos");
-				if (photoObject.getInt("count") > 0) {
+				if (photoObject.getInt("count") > 0) { // デバッグ用に-1にする
 					Log.d(TAG, "photos count > 0");
 					// categoriesのiconのURL(prefix)に"food"を含むかどうか調べる
 					JSONObject venueObject = tmpObject.getJSONObject("venue");
@@ -67,24 +68,39 @@ public class FoursquareJsonParser {
 					JSONObject categoriesObject = categoriesArray.getJSONObject(0);
 					JSONObject iconObject = categoriesObject.getJSONObject("icon");
 					// "food"を含んでいる場合のみCheckinDataを作成する
-					if (iconObject.getString("prefix").indexOf("food") != -1) {
+					if (iconObject.getString("prefix").indexOf("food") != -1) { //デバッグ用に||trueにする
 						CheckinData cd = new CheckinData();
 						cd.setCheckinId(tmpObject.getString("id"));
 						cd.setVenueName(venueObject.getString("name"));
 						cd.setVenueId(venueObject.getString("id"));
 						
+						if (tmpObject.has("shout")) {
+							cd.setMessage(tmpObject.getString("shout"));
+						}
+						
 						JSONObject locationObject = venueObject.getJSONObject("location");
 						cd.setLng(locationObject.getDouble("lng"));
 						cd.setLat(locationObject.getDouble("lat"));
+						JSONObject statsObject = venueObject.getJSONObject("stats");
+						cd.setCheckinCount(statsObject.getInt("checkinsCount"));
+						if (locationObject.has("state") && locationObject.has("city") && locationObject.has("address")) {
+							String state = locationObject.getString("state");
+							String city = locationObject.getString("city");
+							String address = locationObject.getString("address");
+							cd.setVenueAddress(state, city, address);
+						}
 						
 						JSONObject userObject = tmpObject.getJSONObject("user");
 						String lastName = userObject.getString("lastName");
 						String firstName = userObject.getString("firstName");
 						cd.setFriendName(lastName, firstName);
+						JSONObject userPhotoObject = userObject.getJSONObject("photo");
+						String userImageURL = generateImageURL(userPhotoObject.getString("prefix"), userPhotoObject.getString("suffix"));
+						cd.setUserPhotoURL(userImageURL);
 						
 						JSONArray photoArray = photoObject.getJSONArray("items");
 						JSONObject photoObject2 = photoArray.getJSONObject(0);
-						cd.setPhotoUrl(photoObject2.getString("prefix"), photoObject2.getString("suffix"));
+						cd.setPhotoURL(photoObject2.getString("prefix"), photoObject2.getString("suffix"));
 						
 						list.add(cd);
 					}					
@@ -97,4 +113,9 @@ public class FoursquareJsonParser {
 		return list;
 	}
 	
+	static String generateImageURL(String prefix, String suffix) {
+		prefix = prefix.replace("\\", "");
+		suffix = suffix.replace("\\", "");
+		return prefix + PHOTO_SIZE + suffix;
+	}
 }
