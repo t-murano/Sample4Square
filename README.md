@@ -6,4 +6,4 @@ Sample4Square
   
 [AndroidAnnotations](https://github.com/excilys/androidannotations)を利用して開発しています。  
 また、このコードは以下のライブラリを使用しサンプルコードを参考にしています。  
-[foursquare-android-oauth](https://github.com/foursquare/foursquare-android-oauth)Z
+[foursquare-android-oauth](https://github.com/foursquare/foursquare-android-oauth)
